@@ -3,11 +3,14 @@ package surfthon.campus_call.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import surfthon.campus_call.domain.Keyword;
 import surfthon.campus_call.dto.ChatGptRequestDto;
 import surfthon.campus_call.dto.ChatGptResponseDto;
 import surfthon.campus_call.dto.QuestionRequestDto;
 import surfthon.campus_call.service.ChatGptService;
 import surfthon.campus_call.service.KeywordService;
+
+import java.util.List;
 
 @Controller
 public class ChatGptController {
@@ -40,8 +43,12 @@ public class ChatGptController {
         // answer를 데이터베이스에 저장
         keywordService.saveKeywords(answer);
 
+        List<Keyword> topKeywords = keywordService.getTop10Keywords();
+
         model.addAttribute("question", question);
         model.addAttribute("answer", answer);
+        model.addAttribute("topKeywords", topKeywords);
+
         return "chat-gpt";
     }
 }

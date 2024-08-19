@@ -43,6 +43,12 @@
 <body>
 <div class="container">
   <h1>Chat with GPT</h1>
+  <h2>Top 10 Keywords:</h2>
+  <ul>
+    <li th:each="keyword : ${topKeywords}">
+      <span th:text="${keyword.word}"></span>
+    </li>
+  </ul>
   <form th:action="@{/chat-gpt/question}" method="post">
     <textarea name="question" placeholder="Ask a question..."></textarea>
     <button type="submit">Send</button>

@@ -3,12 +3,16 @@ package surfthon.campus_call.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import surfthon.campus_call.domain.Keyword;
 import surfthon.campus_call.repository.KeywordRepository;
 
+import java.util.List;
+
 @Service
+@Slf4j
 public class KeywordService {
 
     private final KeywordRepository keywordRepository;
@@ -50,5 +54,15 @@ public class KeywordService {
             Keyword newKeyword = new Keyword(word);
             entityManager.persist(newKeyword);
         }
+    }
+
+    public List<Keyword> getTop10Keywords() {
+        List<Keyword> keywords = entityManager.createQuery(
+                        "SELECT k FROM Keyword k ORDER BY k.count DESC", Keyword.class)
+                .setMaxResults(10)
+                .getResultList();
+
+        log.info("Top 10 Keywords: {}", keywords);
+        return keywords;
     }
 }
