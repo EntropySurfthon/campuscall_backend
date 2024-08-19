@@ -11,7 +11,4 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class DepartmentRepository {
-
-    private final EntityManager em;
-
 }

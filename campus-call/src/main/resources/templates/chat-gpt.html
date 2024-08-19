@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat with GPT</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+  <h1>Chat with GPT</h1>
+  <form th:action="@{/chat-gpt/question}" method="post">
+    <textarea name="question" placeholder="Ask a question..."></textarea>
+    <button type="submit">Send</button>
+  </form>
+
+  <div class="response" th:if="${answer}">
+    <h2>Your Question:</h2>
+    <p th:text="${question}"></p>
+    <h2>GPT's Answer:</h2>
+    <p th:text="${answer}"></p>
+  </div>
+</div>
+</body>
+</html>
