@@ -7,13 +7,16 @@ import surfthon.campus_call.dto.ChatGptRequestDto;
 import surfthon.campus_call.dto.ChatGptResponseDto;
 import surfthon.campus_call.dto.QuestionRequestDto;
 import surfthon.campus_call.service.ChatGptService;
+import surfthon.campus_call.service.KeywordService;
 
 @Controller
 public class ChatGptController {
     private final ChatGptService chatGptService;
+    private final KeywordService keywordService;
 
-    public ChatGptController(ChatGptService chatGptService) {
+    public ChatGptController(ChatGptService chatGptService, KeywordService keywordService) {
         this.chatGptService = chatGptService;
+        this.keywordService = keywordService;
     }
 
     @GetMapping("/chat-gpt")
@@ -33,6 +36,9 @@ public class ChatGptController {
         QuestionRequestDto requestDto = new QuestionRequestDto(question);
         ChatGptResponseDto responseDto = chatGptService.askQuestion(requestDto);
         String answer = responseDto.getChoices().get(0).getText();
+
+        // answer를 데이터베이스에 저장
+        keywordService.saveKeywords(answer);
 
         model.addAttribute("question", question);
         model.addAttribute("answer", answer);
