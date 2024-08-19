@@ -33,7 +33,7 @@ public class ChatGptService {
     }
 
     public ChatGptResponseDto askQuestion(QuestionRequestDto requestDto) {
-        String modifiedQuestion = requestDto.getQuestion() + " 이 문장에서 키워드를 추출해줘. 그리고 추출한 키워드를 쉼표로 구분해줘";
+        String modifiedQuestion = requestDto.getQuestion() + "-> 명사인 키워드를 추출해서 쉼표로 구분해줘";
         return this.getResponse(
                 this.buildHttpEntity(
                         new ChatGptRequestDto(
