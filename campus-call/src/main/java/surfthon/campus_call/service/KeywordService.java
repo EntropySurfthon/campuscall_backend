@@ -29,6 +29,12 @@ public class KeywordService {
         // 쉼표로 구분된 단어들을 분리
         String[] keywords = responseText.split(",");
 
+        // 키워드 리스트를 문자열로 변환
+        String keywordList = String.join(", ", keywords);
+
+        // SLF4J 로그로 키워드 리스트 출력
+        log.info("Keywords processed: {}", keywordList);
+
         // 각 키워드를 처리
         for (String word : keywords) {
             word = word.trim(); // 공백 제거
@@ -46,19 +52,19 @@ public class KeywordService {
                 .orElse(null);
 
         if (keyword != null) {
+            log.info("already exist : {}", keyword);
             // 이미 존재하는 경우 count 증가
             keyword.incrementCount();
             entityManager.merge(keyword);
-        } else {
-            // 존재하지 않는 경우 새로 저장
-            Keyword newKeyword = new Keyword(word);
-            entityManager.persist(newKeyword);
+        }
+        else {
+            log.info("not exist : {}", word);
         }
     }
 
     public List<Keyword> getTop10Keywords() {
         List<Keyword> keywords = entityManager.createQuery(
-                        "SELECT k FROM Keyword k ORDER BY k.count DESC", Keyword.class)
+                        "SELECT k FROM Keyword k WHERE k.count >= 1 ORDER BY k.count DESC", Keyword.class)
                 .setMaxResults(10)
                 .getResultList();
 
