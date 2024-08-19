@@ -1,10 +1,10 @@
-package surfthon.campuscall;
+package surfthon.campus_call;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CampuscallApplicationTests {
+class CampusCallApplicationTests {
 
 	@Test
 	void contextLoads() {
