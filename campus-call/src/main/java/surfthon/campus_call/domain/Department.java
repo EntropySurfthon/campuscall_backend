@@ -1,7 +1,6 @@
 package surfthon.campus_call.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +13,9 @@ public class Department {
     @Id
     private Long id;
     private String name;
+    private String link;
     private String duty;
-    private List<String> keyword;
+    private String pno;
+    private String keyword;
 
 }
