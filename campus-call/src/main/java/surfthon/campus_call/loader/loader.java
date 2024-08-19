@@ -66,12 +66,14 @@ public class loader implements CommandLineRunner {
                 for (String keywordWord : keywords) {
                     Optional<Keyword> existingKeyword = keywordRepository.findByWord(keywordWord);
                     if (existingKeyword.isPresent()) {
+                        // 기존 키워드가 있을 경우 count를 0으로 설정
                         Keyword keyword = existingKeyword.get();
-                        keyword.incrementCount(); // 기존의 count 값을 1 증가
+                        keyword.setCount(0); // 카운트 초기화
                         keywordRepository.save(keyword);
                     } else {
                         // 새로운 키워드 추가
                         Keyword newKeyword = new Keyword(keywordWord);
+                        newKeyword.setCount(0); // 카운트 초기화
                         keywordRepository.save(newKeyword);
                     }
                 }
