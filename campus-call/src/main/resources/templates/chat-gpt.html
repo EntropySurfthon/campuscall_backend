@@ -1,65 +1,65 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Chat with GPT</title>
-  <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .response {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f4f4f4;
-            border: 1px solid #ccc;
-        }
-    </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Call</title>
+  <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
 <div class="container">
-  <h1>Chat with GPT</h1>
-  <h2>Top 10 Keywords:</h2>
-  <ul>
-    <li th:each="keyword : ${topKeywords}">
-      <span th:text="${keyword.word}"></span>
-    </li>
-  </ul>
-  <form th:action="@{/chat-gpt/question}" method="post">
-    <textarea name="question" placeholder="Ask a question..."></textarea>
-    <button type="submit">Send</button>
-  </form>
+  <h1>Campus Call</h1>
+  <p>대학 생활 중 직면한 문제 상황에 대한 담당 부서를 찾아드리고, <br> 해당 부서의 전화번호를 안내해 드립니다.</p>
+
+  <div class="search-section">
+    <label for="issue-search">문제 상황을 검색하세요</label>
+
+    <!-- 통합된 폼 -->
+    <form id="search-form" th:action="@{/chat-gpt/question}" method="post">
+      <input type="text" id="issue-search" name="question" placeholder="이중전공 변경신청을 정정하고 싶어" required>
+      <button type="submit">전화번호 찾기</button>
+    </form>
+  </div>
+
+  <div class="popular-keywords">
+    <h2>인기 검색어</h2>
+    <div class="keywords" id="keywords-list">
+      <ul>
+        <li th:each="keyword : ${topKeywords}" data-keyword-text="${keyword.word}">
+          <span th:text="${keyword.word}"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
 
   <div class="response" th:if="${answer}">
-    <h2>Your Question:</h2>
-    <p th:text="${question}"></p>
-    <h2>GPT's Answer:</h2>
-    <p th:text="${answer}"></p>
+
   </div>
 </div>
+
+<!-- Departments List Section -->
+<div class="departments-list">
+  <h2>부서 목록</h2>
+  <div id="departments-list">
+    <ul>
+      <li th:each="department : ${departments}">
+        <span th:text="${department.name}"></span>: <span th:text="${department.phone}"></span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const keywords = document.querySelectorAll('.keywords li');
+    keywords.forEach(keyword => {
+      keyword.addEventListener('click', function() {
+        const searchInput = document.getElementById('issue-search');
+        searchInput.value = this.getAttribute('data-keyword-text');
+      });
+    });
+  });
+</script>
+
 </body>
 </html>
