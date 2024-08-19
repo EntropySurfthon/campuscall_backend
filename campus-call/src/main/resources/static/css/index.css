@@ -6,8 +6,15 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* 상단 정렬 */
     height: 100vh;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 35rem;
 }
 
 .container {
@@ -16,8 +23,7 @@ body {
     border-radius: 0.5rem;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 90%;
-    max-width: 35rem;
+    margin-bottom: 2rem; /* 부서 목록과의 간격 */
 }
 
 h1 {
@@ -96,6 +102,7 @@ p {
 .keywords span:hover {
     background-color: #7FA1C3;
 }
+
 .popular-keywords ul {
     list-style-type: none; /* 기본 점 제거 */
     padding: 0; /* 기본 패딩 제거 */
@@ -104,4 +111,40 @@ p {
 
 .popular-keywords li {
     margin-bottom: 0.75rem; /* 항목 간 간격 조정 */
+}
+
+/* 부서 목록 스타일 추가 */
+.departments-list {
+    background-color: #F5EDED;
+    padding: 2rem 4rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.departments-list h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #6482AD;
+}
+
+#departments-list ul {
+    list-style-type: none; /* 기본 점 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+}
+
+#departments-list li {
+    margin-bottom: 1rem; /* 항목 간 간격 조정 */
+    padding: 0.5rem;
+    border-bottom: 1px solid #ccc; /* 항목 구분선 추가 */
+}
+
+.department-name {
+    color: #6482AD;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.department-name:hover {
+    text-decoration: underline;
 }

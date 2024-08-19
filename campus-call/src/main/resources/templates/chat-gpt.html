@@ -7,50 +7,89 @@
   <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
-<div class="container">
-  <h1>Campus Call</h1>
-  <p>대학 생활 중 직면한 문제 상황에 대한 담당 부서를 찾아드리고, <br> 해당 부서의 전화번호를 안내해 드립니다.</p>
+<div class="content">
+  <div class="container">
+    <h1>Campus Call</h1>
+    <p>대학 생활 중 직면한 문제 상황에 대한 담당 부서를 찾아드리고, <br> 해당 부서의 전화번호를 안내해 드립니다.</p>
 
-  <div class="search-section">
-    <label for="issue-search">문제 상황을 검색하세요</label>
+    <div class="search-section">
+      <label for="issue-search">문제 상황을 검색하세요</label>
+      <!-- 통합된 폼 -->
+      <form id="search-form" th:action="@{/chat-gpt/question}" method="post">
+        <input type="text" id="issue-search" name="question" placeholder="이중전공 변경신청을 정정하고 싶어" required>
+        <button type="submit">전화번호 찾기</button>
+      </form>
+    </div>
 
-    <!-- 통합된 폼 -->
-    <form id="search-form" th:action="@{/chat-gpt/question}" method="post">
-      <input type="text" id="issue-search" name="question" placeholder="이중전공 변경신청을 정정하고 싶어" required>
-      <button type="submit">전화번호 찾기</button>
-    </form>
-  </div>
+    <div class="popular-keywords">
+      <h2>인기 검색어</h2>
+      <div class="keywords" id="keywords-list">
+        <ul>
+          <li th:each="keyword : ${topKeywords}" data-keyword-text="${keyword.word}">
+            <span th:text="${keyword.word}"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-  <div class="popular-keywords">
-    <h2>인기 검색어</h2>
-    <div class="keywords" id="keywords-list">
-      <ul>
-        <li th:each="keyword : ${topKeywords}" data-keyword-text="${keyword.word}">
-          <span th:text="${keyword.word}"></span>
-        </li>
-      </ul>
+    <div class="response" th:if="${answer}">
+      <!-- 검색 결과 응답이 들어갈 부분 -->
     </div>
   </div>
 
-  <div class="response" th:if="${answer}">
-
-  </div>
-</div>
-
-<!-- Departments List Section -->
-<div class="departments-list">
-  <h2>부서 목록</h2>
-  <div id="departments-list">
-    <ul>
-      <li th:each="department : ${departments}">
-        <span th:text="${department.name}"></span>: <span th:text="${department.phone}"></span>
-      </li>
-    </ul>
+  <!-- Departments List Section -->
+  <div class="departments-list">
+    <h2>부서 목록</h2>
+    <div id="departments-list">
+      <ul id="departments-list-ul">
+        <!-- 부서 목록이 이곳에 추가됩니다 -->
+      </ul>
+    </div>
   </div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    // Fetch departments from the server
+    fetch('/api/departments')
+            .then(response => response.json())
+            .then(departments => {
+              const departmentsList = document.getElementById('departments-list-ul');
+              const departmentsGrouped = departments.reduce((acc, department) => {
+                if (!acc[department.name]) {
+                  acc[department.name] = [];
+                }
+                acc[department.name].push(department);
+                return acc;
+              }, {});
+
+              for (const [name, departments] of Object.entries(departmentsGrouped)) {
+                const departmentItem = document.createElement('li');
+
+                // Create a link for the department name
+                const departmentLink = document.createElement('a');
+                departmentLink.href = departments[0].link; // Use the link from the first department in the group
+                departmentLink.textContent = name;
+                departmentLink.classList.add('department-name');
+
+                departmentItem.appendChild(departmentLink);
+
+                const subList = document.createElement('ul');
+                departments.forEach(department => {
+                  const subItem = document.createElement('li');
+                  subItem.textContent = `${department.duty} : ${department.pno}`;
+                  subList.appendChild(subItem);
+                });
+
+                departmentItem.appendChild(subList);
+                departmentsList.appendChild(departmentItem);
+              }
+            })
+            .catch(error => {
+              console.error('Error fetching departments:', error);
+            });
+
+    // Keyword click functionality
     const keywords = document.querySelectorAll('.keywords li');
     keywords.forEach(keyword => {
       keyword.addEventListener('click', function() {
