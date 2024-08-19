@@ -119,12 +119,15 @@ p {
     padding: 2rem 4rem;
     border-radius: 0.5rem;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    width: 100%; /* 목록을 전체 너비로 확장 */
+    max-width: 35rem;
 }
 
 .departments-list h2 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
+    font-size: 1.5rem; /* 제목 크기 조정 */
+    margin-bottom: 1.5rem; /* 제목 아래 간격 조정 */
     color: #6482AD;
+    text-align: center; /* 제목을 가운데 정렬 */
 }
 
 #departments-list ul {
@@ -135,16 +138,35 @@ p {
 
 #departments-list li {
     margin-bottom: 1rem; /* 항목 간 간격 조정 */
-    padding: 0.5rem;
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid #ccc; /* 항목 구분선 추가 */
+    background-color: #FAFAFA; /* 항목 배경색 추가 */
+    border-radius: 0.25rem; /* 항목 모서리 둥글게 */
+    transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+}
+
+#departments-list li:hover {
+    background-color: #F0F0F0; /* 항목 마우스 오버 시 배경색 변경 */
 }
 
 .department-name {
     color: #6482AD;
     text-decoration: none;
     font-weight: bold;
+    font-size: 1.1rem; /* 부서명 크기 조정 */
 }
 
 .department-name:hover {
+    text-decoration: underline;
+}
+
+.phone-number {
+    color: #333;
+    font-size: 1rem;
+    margin-left: 1rem;
+    text-decoration: none;
+}
+
+.phone-number:hover {
     text-decoration: underline;
 }

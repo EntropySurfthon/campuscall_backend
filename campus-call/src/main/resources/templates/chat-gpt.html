@@ -15,7 +15,7 @@
     <div class="search-section">
       <label for="issue-search">문제 상황을 검색하세요</label>
       <!-- 통합된 폼 -->
-      <form id="search-form" th:action="@{/chat-gpt/question}" method="post">
+      <form id="search-form" action="/chat-gpt/question" method="post">
         <input type="text" id="issue-search" name="question" placeholder="이중전공 변경신청을 정정하고 싶어" required>
         <button type="submit">전화번호 찾기</button>
       </form>
@@ -33,7 +33,6 @@
     </div>
 
     <div class="response" th:if="${answer}">
-      <!-- 검색 결과 응답이 들어갈 부분 -->
     </div>
   </div>
 
@@ -42,7 +41,7 @@
     <h2>부서 목록</h2>
     <div id="departments-list">
       <ul id="departments-list-ul">
-        <!-- 부서 목록이 이곳에 추가됩니다 -->
+        <!-- 여기서 하드코딩된 데이터를 JavaScript로 삽입 -->
       </ul>
     </div>
   </div>
@@ -50,54 +49,67 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Fetch departments from the server
     fetch('/api/departments')
-            .then(response => response.json())
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
             .then(departments => {
-              const departmentsList = document.getElementById('departments-list-ul');
+              const departmentsList = document.getElementById("departments-list-ul");
+
               const departmentsGrouped = departments.reduce((acc, department) => {
                 if (!acc[department.name]) {
-                  acc[department.name] = [];
+                  acc[department.name] = {
+                    link: department.link,
+                    details: []
+                  };
                 }
-                acc[department.name].push(department);
+                acc[department.name].details.push({
+                  duty: department.duty,
+                  pno: department.pno
+                });
                 return acc;
               }, {});
 
-              for (const [name, departments] of Object.entries(departmentsGrouped)) {
-                const departmentItem = document.createElement('li');
+              Object.entries(departmentsGrouped).forEach(([name, department]) => {
+                const departmentItem = document.createElement("li");
+                departmentItem.className = "department-item";
 
-                // Create a link for the department name
-                const departmentLink = document.createElement('a');
-                departmentLink.href = departments[0].link; // Use the link from the first department in the group
+                const departmentLink = document.createElement("a");
+                departmentLink.href = department.link;
                 departmentLink.textContent = name;
-                departmentLink.classList.add('department-name');
+                departmentLink.className = "department-name";
 
-                departmentItem.appendChild(departmentLink);
+                const departmentTitle = document.createElement("strong");
+                departmentTitle.appendChild(departmentLink);
+                departmentItem.appendChild(departmentTitle);
 
-                const subList = document.createElement('ul');
-                departments.forEach(department => {
-                  const subItem = document.createElement('li');
-                  subItem.textContent = `${department.duty} : ${department.pno}`;
-                  subList.appendChild(subItem);
+                const detailsList = document.createElement("ul");
+                department.details.forEach(detail => {
+                  const detailItem = document.createElement("li");
+                  detailItem.textContent = `${detail.duty}: `;
+
+                  const phoneLink = document.createElement("a");
+                  phoneLink.className = "phone-number";
+                  phoneLink.href = `tel:${detail.pno}`;
+                  phoneLink.textContent = detail.pno;
+
+                  detailItem.appendChild(phoneLink);
+                  detailsList.appendChild(detailItem);
                 });
 
-                departmentItem.appendChild(subList);
+                departmentItem.appendChild(detailsList);
                 departmentsList.appendChild(departmentItem);
-              }
+              });
             })
             .catch(error => {
               console.error('Error fetching departments:', error);
             });
-
-    // Keyword click functionality
-    const keywords = document.querySelectorAll('.keywords li');
-    keywords.forEach(keyword => {
-      keyword.addEventListener('click', function() {
-        const searchInput = document.getElementById('issue-search');
-        searchInput.value = this.getAttribute('data-keyword-text');
-      });
-    });
   });
+
+
 </script>
 
 </body>
